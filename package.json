@@ -1,0 +1,8 @@
+{
+  "name": "scryfall-budget",
+  "version": "1.0.0",
+  "description": "Calculate budget of decklist",
+  "main": "index.js",
+  "author": "Wilhelm Mailaender <wilhelm@mailaender-home.de>",
+  "license": "MIT"
+}

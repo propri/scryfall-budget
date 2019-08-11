@@ -6,6 +6,8 @@
   "author": "Wilhelm Mailaender <wilhelm@mailaender-home.de>",
   "license": "MIT",
   "dependencies": {
+    "cli-color": "^1.4.0",
+    "command-line-args": "^5.1.1",
     "lodash": "^4.17.15",
     "request": "^2.88.0"
   }

@@ -8,7 +8,7 @@ const PromRequest = (url) => new Promise((resolve, reject) => {
       }
       resolve({ response, body })
     })
-  }, 100)
+  }, 50)
 })
 
 module.exports = PromRequest

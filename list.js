@@ -16,7 +16,7 @@ const cleanEntries = (lines) => {
   lines.split('\n').forEach(line => {
     console.log(line)
     if (line.trim()) {
-      const match = line.match(/(\d+)\w?[xX*]?\w(.*)/)
+      const match = line.match(/(\d+)\s?[xX*]?\s(.*)/)
       if (match) {
         cardNum += parseInt(match[1], 10)
         cardNames.push(match[2].trim())
@@ -26,7 +26,7 @@ const cleanEntries = (lines) => {
     }
   })
   if (cardNum !== 100) {
-    console.log(`Warning, valid commander deck needs 100 cards. Cards in decklist: ${cardNum}`)
+    console.warn(`>>> Warning, valid commander deck needs 100 cards. Cards in decklist: ${cardNum} <<<`)
   }
   return cardNames
 }

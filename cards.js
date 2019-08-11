@@ -1,5 +1,9 @@
-const PromRequest = require('./PromRequest')
 const _ = require('lodash')
+
+const CardCache = require('./CardCache')
+const PromRequest = require('./PromRequest')
+
+const cache = new CardCache()
 
 const getList = (cardName, i = 1) => {
   return PromRequest(`https://api.scryfall.com/cards/search?q=!"${cardName}"&unique=prints&page=${i}`)
@@ -9,6 +13,12 @@ const getList = (cardName, i = 1) => {
 const removeGold = (cards) => cards.filter(card => card.border !== 'gold')
 
 const getCards = async (cardName) => {
+  /* check if data is already in cache */
+  const cachedInfo = await cache.getCardInfo(cardName)
+  if (cachedInfo) {
+    return cachedInfo
+  }
+
   const results = []
   let i = 1
   let cards = await getList(cardName, i)
@@ -24,7 +34,10 @@ const getCards = async (cardName) => {
     cards = await getList(cardName, i)
     results.push(cards.data)
   }
-  return removeGold(_.flatten(results))
+  const completeData = removeGold(_.flatten(results))
+  /* save new info in cache */
+  await cache.setCardInfo(cardName, completeData)
+  return completeData
 }
 
 const minPrice = (cardName) => {

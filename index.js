@@ -15,6 +15,7 @@ const showHelp = () => {
   console.log('\t--list, -l "filename":\tPath to decklist file.')
   console.log('\t\tFile format:\n\t\t\t1x Opt\n\t\t\t10x Island\n')
   console.log('Example command:\n\tnode index.js -v --max 30 list.txt\nCheck price for decklist in list.txt including detailed prices and checking against maximum of 30€\n')
+  console.log('card info is cached for 24 hours (in cards.cache file)')
 }
 
 const main = () => {
@@ -53,12 +54,15 @@ const main = () => {
         process.exit()
       })
       .then(() => loadList(listFile))
-      .then(data => cleanEntries(data))
+      .then(data => cleanEntries(data, options.verbose))
       .then(async data => {
         results = []
         /* respect grace period */
         for (let i = 0; i < data.length; i += 1) {
           let price = await minPrice(data[i])
+          if (options.verbose) {
+            console.log(`${data[i]} - ${price.toFixed(2)}€`)
+          }
           results.push(price)
         }
         return results

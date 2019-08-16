@@ -3,7 +3,7 @@ const _ = require('lodash')
 const CardCache = require('./CardCache')
 const PromRequest = require('./PromRequest')
 
-const cache = new CardCache()
+const cache = new CardCache('data/cards.cache')
 
 const getList = (cardName, i = 1) => {
   return PromRequest(`https://api.scryfall.com/cards/search?q=!"${cardName}"&unique=prints&page=${i}`)

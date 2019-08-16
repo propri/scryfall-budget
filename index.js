@@ -2,6 +2,7 @@
 const fs = require('fs')
 const cla = require('command-line-args')
 const clc = require('cli-color')
+const _ = require('lodash')
 
 const { minPrice, getCards } = require('./cards')
 const { loadList, cleanEntries } = require('./list')
@@ -12,6 +13,7 @@ const showHelp = () => {
   console.log('\t--card, -c "Cardname":\tCheck price for a single card')
   console.log('\t--max, -m:\t\t(optional) Maximum value of the deck')
   console.log('\t--verbose, -v:\t\tShow individual card prices')
+  console.log('\t--sort, -s\tshow cards sorted by price')
   console.log('\t--list, -l "filename":\tPath to decklist file.')
   console.log('\t\tFile format:\n\t\t\t1x Opt\n\t\t\t10x Island\n')
   console.log('Example command:\n\tnode index.js -v --max 30 list.txt\nCheck price for decklist in list.txt including detailed prices and checking against maximum of 30€\n')
@@ -24,6 +26,7 @@ const main = () => {
     { name: 'max', alias: 'm', type: Number },
     { name: 'verbose', alias: 'v', type: Boolean },
     { name: 'list', type: String, defaultOption: true },
+    { name: 'sort', alias: 's', type: Boolean },
   ]
 
   const options = cla(optionDefinitions)
@@ -57,17 +60,23 @@ const main = () => {
       .then(data => cleanEntries(data, options.verbose))
       .then(async data => {
         results = []
-        /* respect grace period */
+        /* respect grace period -> only one request at a time */
         for (let i = 0; i < data.length; i += 1) {
-          let price = await minPrice(data[i])
+          let cardName = data[i]
+          let price = await minPrice(cardName)
           if (options.verbose) {
-            console.log(`${data[i]} - ${price.toFixed(2)}€`)
+            console.log(`${cardName} - ${price.toFixed(2)}€`)
           }
-          results.push(price)
+          results.push({cardName, price})
+        }
+        if (options.sort) {
+          _.sortBy(results, ['price', 'cardName'], ['asc', 'asc']).forEach(x => {
+            console.log(`${x.cardName} - ${x.price.toFixed(2)}€`)
+          })
         }
         return results
       })
-      .then(data => data.reduce((total, currentValue) => total + currentValue))
+      .then(data => data.reduce((total, currentValue) => total + currentValue.price, 0))
       .then(completePrice => {
         console.log('*'.repeat(30))
         if (options.max) {

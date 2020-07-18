@@ -9,11 +9,11 @@ const { loadList, cleanEntries } = require('./list')
 /* Imports */
 
 const showHelp = () => {
-  console.log('Copmute prices of decklist\n')
+  console.log('Compute prices of decklist\n')
   console.log('\t--card, -c "Cardname":\tCheck price for a single card')
   console.log('\t--max, -m:\t\t(optional) Maximum value of the deck')
   console.log('\t--verbose, -v:\t\tShow individual card prices')
-  console.log('\t--sort, -s\tshow cards sorted by price')
+  console.log('\t--sort, -s\t\tshow cards sorted by price')
   console.log('\t--list, -l "filename":\tPath to decklist file.')
   console.log('\t\tFile format:\n\t\t\t1x Opt\n\t\t\t10x Island\n')
   console.log('Example command:\n\tnode index.js -v --max 30 list.txt\nCheck price for decklist in list.txt including detailed prices and checking against maximum of 30€\n')
